@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'ONY FORM';
+    src: url('./ONYFORM-Regular.eot');
+    src: url('./ONYFORM-Regular.eot?#iefix') format('embedded-opentype'),
+        url('./ONYFORM-Regular.woff2') format('woff2'),
+        url('./ONYFORM-Regular.woff') format('woff'),
+        url('./ONYFORM-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ONY-FORM Digital';
+    src: url('./ONY-FORMDigital-Regular.eot');
+    src: url('./ONY-FORMDigital-Regular.eot?#iefix') format('embedded-opentype'),
+        url('./ONY-FORMDigital-Regular.woff2') format('woff2'),
+        url('./ONY-FORMDigital-Regular.woff') format('woff'),
+        url('./ONY-FORMDigital-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ONY FORM Outline';
+    src: url('./ONYFORM-Outline.eot');
+    src: url('./ONYFORM-Outline.eot?#iefix') format('embedded-opentype'),
+        url('./ONYFORM-Outline.woff2') format('woff2'),
+        url('./ONYFORM-Outline.woff') format('woff'),
+        url('./ONYFORM-Outline.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
