@@ -131,7 +131,7 @@ export default {
             },
           ]
         },
-        { id: 3, fullName: "Longerthsayuaossd Jsaidasidaddosa" }
+        // { id: 3, fullName: "Longerthsayuaossd Jsaidasidaddosa" }
       ],
     }
   },
@@ -189,7 +189,6 @@ export default {
       this.startTimer()
     },
     'messages': function(messages) {
-      console.log("hui sosu", messages)
       if (this.doFilter) {
         let target = messages.find(el => el?.highlight === true)
         if (target) {

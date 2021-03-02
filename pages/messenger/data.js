@@ -514,7 +514,7 @@ export default
     [
       {
         id: 91,
-        text: "Plato: yeah this is where your master's degree comes into play",
+        text: "yeah this is where your master's degree comes into play",
         type: "regular"
       }
     ]

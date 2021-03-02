@@ -50,8 +50,8 @@ export default {
 
           ]
         },
-        { id: 2, fullName: "Krutaya Mamasha", avatar: "https://super01.ru/pictures/product/big/42300_big.jpg", },
-        { id: 3, fullName: "Longertharteson Jsaidalosiaver", avatar: "https://vokrug-tv.ru/pic/person/0/d/6/8/0d681ba6ed916cc9d795ef6dfdeac19b.jpeg",}
+        //  { id: 2, fullName: "Krutaya Mamasha", avatar: "https://super01.ru/pictures/product/big/42300_big.jpg", },
+        // { id: 3, fullName: "Longertharteson Jsaidalosiaver", avatar: "https://vokrug-tv.ru/pic/person/0/d/6/8/0d681ba6ed916cc9d795ef6dfdeac19b.jpeg",}
       ],
     }
   },
