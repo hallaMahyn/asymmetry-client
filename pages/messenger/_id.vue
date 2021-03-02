@@ -23,7 +23,7 @@
           <div
             :class="{
               'messages-message_option': true,
-              'messages-message_option--selected': o.id === answerSelected,
+              'messages-message_option--selected': answersSelected.includes(o.id),
               'messages-message_option--disabled': answerIds.includes(o.id)
             }"
             v-for="(o, i) in m.options"
@@ -58,7 +58,7 @@ export default {
   data() {
     return {
     startAnimation: false,
-    answerSelected: null,
+    answersSelected: [],
     highlightFeed: false,
     doFilter: true,
     answerIds: [],
@@ -173,7 +173,7 @@ export default {
 
 
 
-      this.answerSelected = option.id
+      this.answersSelected.push(option.id)
       this.answerIds.push(...optionIds)
       this.currentSection++
     }
