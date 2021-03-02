@@ -1,50 +1,51 @@
 <template>
   <div class="dialog-wrapper">
     <div :class="{'messages': true, 'highlight': highlightFeed}" >
-      <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
-        :style="{
-          opacity: startAnimation ? '1' : '0',
-          transform: startAnimation ? 'translateY(0)' : 'translateY(-20px)',
-          transitionDelay: `${index * 0.3}s`
-        }"
-      >
-      <div
-        :class="{
-          'messages-message': true,
-          'messages-message_regular': m.type === 'regular',
-          'messages-message_task': m.type === 'task',
-          'messages-message_system': m.type === 'system',
-          'messages-message_option': m.type === 'answer',
-          'messages-message_option--selected': m.id === answerSelected
-        }"
-      >
-        <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
-        <div class="messages-message-text"> {{m.text}} </div>
 
-      </div>
-        <div
-        :class="{
-          'messages-message_option': true,
-          'messages-message_option--selected': o.id === answerSelected,
-          'messages-message_option--disabled': answerIds.includes(o.id)
-        }"
-        v-for="(o, i) in m.options"
-        :key="o.id + i"
-        @click="setAnswerSelected(o, m)"
+      <transition-group name="list-complete" appear>
+        <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
+
         >
-          <div class="messages-message_option_text">{{o.text}}</div>
-        </div>
-      </div>
-    </div>
-    <div class="chapter-section">
-      <div class="chapter-title">Chapters</div>
-      <div class="chapter-wrapper">
-        <div class="chapter-one" v-for="(ch, i) in chapters" :key="ch.id + i">
-          {{i + 1}}
-        </div>
-      </div>
-    </div>
 
+          <div
+            :class="{
+              'messages-message': true,
+              'messages-message_regular': m.type === 'regular',
+              'messages-message_task': m.type === 'task',
+              'messages-message_system': m.type === 'system',
+              'messages-message_option': m.type === 'answer',
+              'messages-message_option--selected': m.id === answerSelected
+            }"
+          >
+            <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
+            <div class="messages-message-text"> {{m.text}} </div>
+          </div>
+          <div
+            :class="{
+              'messages-message_option': true,
+              'messages-message_option--selected': o.id === answerSelected,
+              'messages-message_option--disabled': answerIds.includes(o.id)
+            }"
+            v-for="(o, i) in m.options"
+            :key="o.id + i"
+            @click="setAnswerSelected(o, m)"
+          >
+            <div class="messages-message_option_text">{{o.text}}</div>
+          </div>
+          
+        </div>
+      </transition-group>
+      </div>
+
+      <div class="chapter-section">
+        <div class="chapter-title">Chapters</div>
+        <div class="chapter-wrapper">
+          <div class="chapter-one" v-for="(ch, i) in chapters" :key="ch.id + i">
+            {{i + 1}}
+          </div>
+        </div>
+    </div>
+    
   </div>
 </template>
 
@@ -189,6 +190,8 @@ export default {
       this.startTimer()
     },
     'messages': function(messages) {
+      // this.startTimer()
+
       if (this.doFilter) {
         let target = messages.find(el => el?.highlight === true)
         if (target) {
@@ -234,6 +237,9 @@ export default {
   }
 
 }
+.messages > span {
+  width: 100%;
+}
 
 .messages-wrapper {
   display: flex;
@@ -242,7 +248,7 @@ export default {
   align-items: flex-start;
   justify-content: flex-start;
 
-  opacity: 0;
+  /* opacity: 0; */
   transform: translateY(0);
   transition: transform 0.2s ease, opacity 0.2s ease;
   will-change: transform, opacity;
@@ -429,6 +435,20 @@ export default {
 }
 .highlight {
   /* border: 5px solid blue */
+}
+
+.list-complete-item {
+  transition: all 1s;
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-complete-leave-active {
+  position: absolute;
 }
 
 
