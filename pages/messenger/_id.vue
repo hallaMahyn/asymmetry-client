@@ -394,20 +394,20 @@ export default {
   line-height: 19px;
   flex-flow: column nowrap;
   flex: 1;
-  align-items: center;
+  align-items: left;
   justify-content: center;
-    max-width: 100px;
+  max-width: 100px;
 }
 
 .chapter-title {
   margin-bottom: 24px;
+  padding-left: 12px;
 }
 
 .chapter-wrapper {
   display: flex;
   flex-flow: row wrap;
-
-    align-items: center;
+  align-items: center;
   justify-content: center;
 
 }
