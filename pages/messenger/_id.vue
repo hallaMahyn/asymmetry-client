@@ -4,12 +4,16 @@
 
       <div :class="{'messages': true, 'highlight': highlightFeed}"  >
 
-        <!-- <transition-group name="list-complete" appear> -->
+        <transition-group name="list-complete" appear>
           <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
 
           >
             <div class="messages-message-with-avatar">
-              <img v-if="m.type === 'regular'" class="avatar" src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"/>
+              <img
+                v-if="m.type === 'regular'"
+                class="avatar"
+                src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"
+              />
               <div
                 :class="{
                   'messages-message': true,
@@ -37,7 +41,7 @@
               <div class="messages-message_option_text">{{o.text}}</div>
             </div>
           </div>
-        <!-- </transition-group> -->
+        </transition-group>
         </div>
       </div>
 
@@ -469,14 +473,13 @@ export default {
 }
 
 .list-complete-item {
-  transition: all 5s;
+  transition: all 3s;
   display: inline-block;
-  /* margin-right: 10px; */
 }
 .list-complete-enter, .list-complete-leave-to
 /* .list-complete-leave-active до версии 2.1.8 */ {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(15px);
 }
 .list-complete-leave-active {
   position: absolute;
