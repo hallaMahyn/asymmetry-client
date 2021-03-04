@@ -1,40 +1,42 @@
 <template>
   <div class="dialog-wrapper">
-    <div :class="{'messages': true, 'highlight': highlightFeed}" >
+    <div class="messages-scroll-wrapper" ref="messages">
 
-      <transition-group name="list-complete" appear>
-        <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
+      <div :class="{'messages': true, 'highlight': highlightFeed}"  >
 
-        >
+        <!-- <transition-group name="list-complete" appear> -->
+          <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
 
-          <div
-            :class="{
-              'messages-message': true,
-              'messages-message_regular': m.type === 'regular',
-              'messages-message_task': m.type === 'task',
-              'messages-message_system': m.type === 'system',
-              'messages-message_option': m.type === 'answer',
-              'messages-message_option--selected': m.id === answerSelected
-            }"
           >
-            <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
-            <div class="messages-message-text"> {{m.text}} </div>
+
+            <div
+              :class="{
+                'messages-message': true,
+                'messages-message_regular': m.type === 'regular',
+                'messages-message_task': m.type === 'task',
+                'messages-message_system': m.type === 'system',
+                'messages-message_option': m.type === 'answer',
+                'messages-message_option--selected': answersSelected.includes(m.id)
+              }"
+            >
+              <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
+              <div class="messages-message-text"> {{m.text}} </div>
+            </div>
+            <div
+              :class="{
+                'messages-message_option': true,
+                'messages-message_option--selected': answersSelected.includes(o.id),
+                'messages-message_option--disabled': answerIds.includes(o.id)
+              }"
+              v-for="(o, i) in m.options"
+              :key="o.id + i"
+              @click="setAnswerSelected(o, m)"
+            >
+              <div class="messages-message_option_text">{{o.text}}</div>
+            </div>
           </div>
-          <div
-            :class="{
-              'messages-message_option': true,
-              'messages-message_option--selected': answersSelected.includes(o.id),
-              'messages-message_option--disabled': answerIds.includes(o.id)
-            }"
-            v-for="(o, i) in m.options"
-            :key="o.id + i"
-            @click="setAnswerSelected(o, m)"
-          >
-            <div class="messages-message_option_text">{{o.text}}</div>
-          </div>
-          
+        <!-- </transition-group> -->
         </div>
-      </transition-group>
       </div>
 
       <div class="chapter-section">
@@ -45,7 +47,6 @@
           </div>
         </div>
     </div>
-    
   </div>
 </template>
 
@@ -151,27 +152,31 @@ export default {
       }, 200)
     },
 
-    setAnswerSelected (option, message) {
+    scrollToBottom() {
+      this.$refs.messages.scrollTo(0, this.$refs.messages.scrollHeight);
+    },
+
+    async setAnswerSelected (option, message) {
+
+      console.log(this.$refs.messages.scrollHeight)
       if (this.answerIds.includes(option.id)) return
 
       let optionIds = message?.options.map(opt => opt.id)
 
       let nextSection = sections[this.currentSection] || []
+      let newMessages =  []
 
       if (option?.highlight === false) {
         this.highlightFeed = !this.highlightFeed
       }
 
+      newMessages = option?.messages?.length > 0 ? [...option.messages, ...nextSection] : nextSection
 
-      if (option?.messages?.length > 0) {
-        this.characters[$nuxt.$route.params.id - 1].messages.push(...option.messages)
-        this.characters[$nuxt.$route.params.id - 1].messages.push(...nextSection)
-      } else {
-        this.characters[$nuxt.$route.params.id - 1].messages.push(...nextSection)
-      }
-
-
-
+      await newMessages.map(async (el, i) => {
+        return setTimeout(() => {
+          this.characters[$nuxt.$route.params.id - 1].messages.push(el)
+        }, (i + 1) * 700)
+      })
 
       this.answersSelected.push(option.id)
       this.answerIds.push(...optionIds)
@@ -190,7 +195,8 @@ export default {
       this.startTimer()
     },
     'messages': function(messages) {
-      // this.startTimer()
+      setTimeout(() => this.scrollToBottom(), 0 )
+      // this.scrollToBottom()
 
       if (this.doFilter) {
         let target = messages.find(el => el?.highlight === true)
@@ -219,6 +225,13 @@ export default {
   font-size: 16px;
 
 }
+.messages-scroll-wrapper {
+  height: 100%;
+  max-height: 100vh;
+  /* width: 100%; */
+  overflow: auto;
+  flex: 2;
+}
 .messages {
   display: flex;
   flex-flow: column nowrap;
@@ -226,14 +239,14 @@ export default {
   align-items: flex-start;
   margin-right: 20px;
   flex: 5;
-   padding-bottom: 42px;
+  padding-bottom: 24px;
+
 
   &-message {
     max-width: 606px;
     padding: 21px 24px;
     border-radius: 12px;
     margin-bottom: 12px;
-
   }
 
 }
@@ -247,6 +260,7 @@ export default {
   flex-flow: column nowrap;
   align-items: flex-start;
   justify-content: flex-start;
+
 
   /* opacity: 0; */
   transform: translateY(0);
@@ -438,9 +452,9 @@ export default {
 }
 
 .list-complete-item {
-  transition: all 1s;
+  transition: all 5s;
   display: inline-block;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 .list-complete-enter, .list-complete-leave-to
 /* .list-complete-leave-active до версии 2.1.8 */ {
