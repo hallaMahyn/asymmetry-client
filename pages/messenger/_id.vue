@@ -9,7 +9,7 @@
 
           >
             <div class="messages-message-with-avatar">
-              <img class="avatar" src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"/>
+              <img v-if="m.type === 'regular'" class="avatar" src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"/>
               <div
                 :class="{
                   'messages-message': true,
