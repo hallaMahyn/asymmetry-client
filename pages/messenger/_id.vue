@@ -164,7 +164,7 @@ export default {
 
     async setAnswerSelected (option, message) {
 
-      console.log(this.$refs.messages.scrollHeight)
+      // console.log(this.$refs.messages.scrollHeight)
       if (this.answerIds.includes(option.id)) return
 
       let optionIds = message?.options.map(opt => opt.id)
@@ -236,7 +236,12 @@ export default {
   max-height: 100vh;
   /* width: 100%; */
   overflow: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   flex: 2;
+}
+.messages-scroll-wrapper::-webkit-scrollbar {
+  display: none;
 }
 .messages {
   display: flex;
