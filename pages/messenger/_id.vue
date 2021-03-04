@@ -179,9 +179,11 @@ export default {
       newMessages = option?.messages?.length > 0 ? [...option.messages, ...nextSection] : nextSection
 
       await newMessages.map(async (el, i) => {
+        // let time = el.text.length * 0.7 * 300
         return setTimeout(() => {
           this.characters[$nuxt.$route.params.id - 1].messages.push(el)
-        }, (i + 1) * 700)
+        // }, time)
+        }, (i + 1) *  700)
       })
 
       this.answersSelected.push(option.id)
@@ -484,7 +486,7 @@ export default {
 .list-complete-enter, .list-complete-leave-to
 /* .list-complete-leave-active до версии 2.1.8 */ {
   opacity: 0;
-  transform: translateY(15px);
+  transform: translateY(-30px) translateX(30px);
 }
 .list-complete-leave-active {
   position: absolute;
