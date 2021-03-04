@@ -8,19 +8,21 @@
           <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
 
           >
-
-            <div
-              :class="{
-                'messages-message': true,
-                'messages-message_regular': m.type === 'regular',
-                'messages-message_task': m.type === 'task',
-                'messages-message_system': m.type === 'system',
-                'messages-message_option': m.type === 'answer',
-                'messages-message_option--selected': answersSelected.includes(m.id)
-              }"
-            >
-              <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
-              <div class="messages-message-text"> {{m.text}} </div>
+            <div class="messages-message-with-avatar">
+              <img class="avatar" src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"/>
+              <div
+                :class="{
+                  'messages-message': true,
+                  'messages-message_regular': m.type === 'regular',
+                  'messages-message_task': m.type === 'task',
+                  'messages-message_system': m.type === 'system',
+                  'messages-message_option': m.type === 'answer',
+                  'messages-message_option--selected': answersSelected.includes(m.id)
+                }"
+              >
+                <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
+                <div class="messages-message-text"> {{m.text}} </div>
+              </div>
             </div>
             <div
               :class="{
@@ -254,6 +256,15 @@ export default {
   width: 100%;
 }
 
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
 .messages-wrapper {
   display: flex;
   width: 100%;
@@ -266,6 +277,12 @@ export default {
   transform: translateY(0);
   transition: transform 0.2s ease, opacity 0.2s ease;
   will-change: transform, opacity;
+}
+
+.messages-message-with-avatar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-end;
 }
 
 .messages-message_task .messages-message-text {
