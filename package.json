@@ -9,10 +9,12 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "node-sass": "^5.0.0",
     "nuxt": "^2.14.12",
     "nuxt-svg-loader": "^1.2.0",
+    "phoenix-channels": "^1.0.0",
     "sass-loader": "10.1.1"
   },
   "devDependencies": {}

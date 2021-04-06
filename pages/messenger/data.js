@@ -3,53 +3,26 @@ export default
     [
       {
         id: 4,
-        text: "no worries, i'm sure you'll help me later ;)",
-        type: "regular",
+        title: "no worries, i'm sure you'll help me later ;)",
+        type: "text",
+        // options: [],
       },
       {
         id: 5,
         text: "first impressions?",
-        type: "regular",
+        type: "question",
           options: [
             {
               id: 6,
               text: "i'm not entirely sure what i'm looking at",
-              type: "answer",
-              messages: [
-                {
-                  id: 7,
-                  text: "yeah, i totally get you",
-                  type: "regular",
-                },
-                {
-                  id: 8,
-                  text: "don't worry, it's super simple, you'll get the hang of it",
-                  type: "regular",
-                },
-                {
-                  id: 9,
-                  text: "let me show you around!",
-                  type: "regular",
-                },
-              ]
+              type: "option",
+              selected: true
 
             },
             {
               id: 7,
               text: "the UI seems cool!",
-              type: "answer",
-              messages: [
-                {
-                  id: 10,
-                  text: "i know right? it's like cyberpunkish.",
-                  type: "regular"
-                },
-                {
-                  id: 11,
-                  text: "come on, i'll show you around! ",
-                  type: "regular"
-                },
-              ]
+              type: "option",
             },
 
             {

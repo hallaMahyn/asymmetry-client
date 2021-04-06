@@ -1,7 +1,7 @@
 <template>
-  <NuxtLink class="character-card" :to="`/messenger/${character.id}`" @click="onClick">
-    <img class="character-card_avatar" :src="character.avatar"/>
-    <div class="character-card_full-name">{{character.fullName}}</div>
+  <NuxtLink class="character-card" :to="`/messenger/${character.id}`" >
+    <img class="character-card_avatar" :src="character.avatar || 'https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg'"/>
+    <div class="character-card_full-name">{{character.first_name}}</div>
   </NuxtLink>
 
 </template>
@@ -24,9 +24,7 @@ export default {
   },
 
   methods: {
-      onClick () {
-          this.$emit('click')
-      }
+
   },
 
   mounted: function () {

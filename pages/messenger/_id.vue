@@ -5,42 +5,12 @@
       <div :class="{'messages': true, 'highlight': highlightFeed}"  >
 
         <transition-group name="list-complete" appear>
-          <div class="messages-wrapper" v-for="(m, index) in messages"  :key="m.id + index"
-
-          >
-            <div class="messages-message-with-avatar">
-              <img
-                v-if="m.type === 'regular'"
-                class="avatar"
-                src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"
-              />
-              <div
-                :class="{
-                  'messages-message': true,
-                  'messages-message_regular': m.type === 'regular',
-                  'messages-message_task': m.type === 'task',
-                  'messages-message_system': m.type === 'system',
-                  'messages-message_option': m.type === 'answer',
-                  'messages-message_option--selected': answersSelected.includes(m.id)
-                }"
-              >
-                <div class="messages-message-title" v-if="m.type === 'task'"> {{m.title}} </div>
-                <div class="messages-message-text"> {{m.text}} </div>
-              </div>
-            </div>
-            <div
-              :class="{
-                'messages-message_option': true,
-                'messages-message_option--selected': answersSelected.includes(o.id),
-                'messages-message_option--disabled': answerIds.includes(o.id)
-              }"
-              v-for="(o, i) in m.options"
-              :key="o.id + i"
-              @click="setAnswerSelected(o, m)"
-            >
-              <div class="messages-message_option_text">{{o.text}}</div>
-            </div>
-          </div>
+          <messeges-section
+            v-for="(m, i) in messages"
+            :key="i + m.id" :message="m"
+            :selected="answersSelected"
+            :answerIds="answerIds"
+            @setSelected="setAnswerSelected" />
         </transition-group>
         </div>
       </div>
@@ -59,94 +29,45 @@
 <script>
 
 import sections  from "./data.js"
+import { Socket } from 'phoenix-channels'
+import axios from 'axios'
 
 export default {
+  props: {
+    mainSocket: {
+      type: Object,
+      required: false
+    }
+  },
 
   data() {
     return {
-    startAnimation: false,
-    answersSelected: [],
-    highlightFeed: false,
-    doFilter: true,
-    answerIds: [],
-    chapters: [
-      {id: 1, title: "first"},
-      {id: 2, title: "two"},
-      {id: 3, title: "3" },
-      {id: 4, title: "4"},
-      {id: 5, title: "first"},
-      {id: 6, title: "two"},
-      {id: 7, title: "3" },
-      {id: 8, title: "4"}
-    ],
-    currentSection: 0,
-    characters: [
-        {
-          id: 1,
-          fullName: "Plato",
-          messages: [
-            {
-              id: 1,
-              text: "hey!!",
-              type: "regular",
-            },
-            {
-              id: 2,
-              text: "finally got around to downloading asymmetry, huh",
-              type: "regular",
-              options: [
-                {
-                  id: 3,
-                  text: "hey plato. thanks for the invite!",
-                  type: "answer"
-                }
-              ]
-            },
-
-          ]
-        },
-        {
-          id: 2,
-          fullName: "Krutaya Mamasha",
-          messages: [
-            {
-              id: 4,
-              text: "Я Крутая Мамаша, приветствую тебя, у меня есть для тебя кое что",
-              type: "regular",
-              },
-            {
-              id: 5,
-              text: "Сейчас я буду задавать тебе вопросы а ты отвечай, только сначала подумай хорошенько, ладно?",
-              type: "regular"
-            },
-            {
-              id: 6,
-              text: "Как зовут 2 хокаге?",
-              title: "Task 1",
-              type: "task",
-              options: [
-                {
-                  id: 3,
-                  text: "Tobirama",
-                  isCorrect: true
-                },
-                {
-                  id: 4,
-                  text: "Obito",
-                  isCorrect: true
-                }
-              ]
-            },
-          ]
-        },
-        // { id: 3, fullName: "Longerthsayuaossd Jsaidasidaddosa" }
+      socket: null,
+      channel: null,
+      startAnimation: false,
+      answersSelected: [],
+      character: null,
+      highlightFeed: false,
+      doFilter: true,
+      answerIds: [],
+      feed: [],
+      chapters: [
+        {id: 1, title: "first"},
+        {id: 2, title: "two"},
+        {id: 3, title: "3" },
+        {id: 4, title: "4"},
+        {id: 5, title: "first"},
+        {id: 6, title: "two"},
+        {id: 7, title: "3" },
+        {id: 8, title: "4"}
       ],
+      currentSection: 0,
     }
   },
 
   computed: {
     messages: function() {
-     return  this.characters[$nuxt.$route.params.id - 1].messages
+     return  this.feed
     }
   },
 
@@ -163,36 +84,93 @@ export default {
     },
 
     async setAnswerSelected (option, message) {
+      console.log("TYT")
 
-      // console.log(this.$refs.messages.scrollHeight)
       if (this.answerIds.includes(option.id)) return
 
-      let optionIds = message?.options.map(opt => opt.id)
+      await this.channel.push("next_message",
+        {
+          answer: {
+            chapter_id: 1,
+            message_id: message.id,
+            option_id: option.id
+          }
+        }
+      )
 
-      let nextSection = sections[this.currentSection] || []
-      let newMessages =  []
+      await this.channel.on("next_message", resp => {
+          console.log("next", resp.messages)
+          resp.messages.map(async (el, i) => {
+          // let time = el.text.length * 0.7 * 300
+          return setTimeout(() => {
+            this.feed.push(el)
+          // }, time)
+          }, (i + 1) *  700)
+        })
+      })
+
+
+      let optionIds = message?.options.map(opt => opt.id)
 
       if (option?.highlight === false) {
         this.highlightFeed = !this.highlightFeed
       }
 
-      newMessages = option?.messages?.length > 0 ? [...option.messages, ...nextSection] : nextSection
-
-      await newMessages.map(async (el, i) => {
-        // let time = el.text.length * 0.7 * 300
-        return setTimeout(() => {
-          this.characters[$nuxt.$route.params.id - 1].messages.push(el)
-        // }, time)
-        }, (i + 1) *  700)
-      })
 
       this.answersSelected.push(option.id)
       this.answerIds.push(...optionIds)
-      this.currentSection++
+      // this.currentSection++
+    },
+
+    async initData() {
+      await this.getCharacter()
+      await this.connectSocket()
+    },
+
+    async connectSocket() {
+      const isProduction = process.env.NODE_ENV === 'production'
+      const socketUrl = isProduction
+        ? 'wss://lk2.staging.newprolab.com/socket'
+        : 'ws://0.0.0.0:4000/socket'
+
+      let defaultSocket = new Socket(socketUrl)
+      this.socket = this.mainSocket || defaultSocket
+
+      this.socket.connect()
+
+      let currentChapter = this.character.chapters[0]
+
+      this.channel = this.socket.channel("user:default", {})
+      this.channel.join()
+        .receive("ok", _ => {
+          console.log("Joined successfully")
+          this.channel.push("start_data", {chapter_id: currentChapter.id})
+
+          this.channel.on("start_data", payload => {
+            let selectedOptionIds = payload.messages.map(m => m.options).flat().filter(o => o.disabled === true).map(o => o.id)
+
+            this.answerIds = selectedOptionIds
+            this.feed = payload.messages || []
+          })
+
+        })
+        .receive("error", resp => { console.log("Unable to join", resp) })
+    },
+
+    async getCharacter() {
+      try {
+        const resp = await axios.get(`http://localhost:4000/api/characters/${this.$route.params.id}`)
+        this.character = resp.data.data
+      } catch (error) {
+        console.error(error);
+        return null
+      }
     }
   },
 
   mounted() {
+    this.initData()
+
     if (!this.startAnimation) {
       this.startTimer()
     }
@@ -204,18 +182,15 @@ export default {
     },
     'messages': function(messages) {
       setTimeout(() => this.scrollToBottom(), 0 )
-      // this.scrollToBottom()
+      this.scrollToBottom()
 
       if (this.doFilter) {
-        let target = messages.find(el => el?.highlight === true)
+        let target = this.messages.find(el => el?.highlight === true)
         if (target) {
           this.highlightFeed = !this.highlightFeed
           this.doFilter = false
         }
-
       }
-
-
     }
   }
 }
@@ -245,7 +220,7 @@ export default {
 .messages-scroll-wrapper::-webkit-scrollbar {
   display: none;
 }
-.messages {
+/* .messages {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
@@ -274,33 +249,31 @@ export default {
   margin-right: 15px;
   object-fit: cover;
   margin-bottom: 12px;
-}
+} */
 
-.messages-wrapper {
+/* .messages-wrapper {
   display: flex;
   width: 100%;
   flex-flow: column nowrap;
   align-items: flex-start;
   justify-content: flex-start;
 
-
-  /* opacity: 0; */
   transform: translateY(0);
   transition: transform 0.2s ease, opacity 0.2s ease;
   will-change: transform, opacity;
-}
+} */
 
-.messages-message-with-avatar {
+/* .messages-message-with-avatar {
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-end;
-}
+} */
 
-.messages-message_task .messages-message-text {
+/* .messages-message_task .messages-message-text {
   opacity: 0.5;
-}
+} */
 
-.messages-message_regular {
+/* .messages-message_regular {
   background: #F3F3F3;
 }
 
@@ -311,8 +284,8 @@ export default {
   align-self: center;
   max-width: 600px;
   font-size: 24px;
-}
-
+} */
+/* 
 .messages-message_task {
   background: #FFECED;
   min-width: 606px;
@@ -349,9 +322,9 @@ export default {
     cursor: default;
   }
 
-}
+} */
 
-.messages-message_option_order {
+/* .messages-message_option_order {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -427,9 +400,7 @@ export default {
 }
 
 .messages-message_option_text {
-
-
-}
+} */
 
 .chapter-section {
   display: flex;
@@ -451,7 +422,6 @@ export default {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-
 }
 
 .chapter-one {

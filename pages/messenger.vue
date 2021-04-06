@@ -3,58 +3,56 @@
     <div class="messenger-contacts">
       <character-card v-for="c in characters" :key="c.id" :character="c" />
     </div>
-    <NuxtChild />
+    <NuxtChild :mainSocket="socket" />
   </div>
 </template>
 
 <script>
 
 import CharacterCard from '@/components/CharacterCard.vue'
+import { Socket } from 'phoenix-channels'
+import axios from 'axios'
+
 export default {
   components: { CharacterCard },
   data() {
     return {
+      socket: null,
       characters: [
-        {
-          id: 1,
-          fullName: "Plato",
-          avatar: "https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg",
-          answers: [
-            {
-              id: 1,
-              text: "privet я Магистр Момолов",
-              type: "regular",
-              },
-            {
-              id: 2,
-              text: "хочешь поиграть со мной в ожну страненнькую игру?",
-              type: "regular"
-            },
-            {
-              id: 3,
-              text: "как зовут 4 хокаге?",
-              type: "question",
-              options: [
-                {
-                  id: 1,
-                  text: "Minato",
-                  correct: true
-                },
-                {
-                  id: 2,
-                  text: "Obama",
-                  correct: false
-                }
-              ]
-            },
-
-          ]
-        },
-        //  { id: 2, fullName: "Krutaya Mamasha", avatar: "https://super01.ru/pictures/product/big/42300_big.jpg", },
+        // {
+        //   id: 1,
+        //   fullName: "Plato",
+        //   avatar: "https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg",
+        // },
+        // { id: 2, fullName: "Krutaya Mamasha", avatar: "https://super01.ru/pictures/product/big/42300_big.jpg", },
         // { id: 3, fullName: "Longertharteson Jsaidalosiaver", avatar: "https://vokrug-tv.ru/pic/person/0/d/6/8/0d681ba6ed916cc9d795ef6dfdeac19b.jpeg",}
       ],
     }
   },
+  methods: {
+    async getCharacters() {
+      try {
+        const resp = await axios.get('http://localhost:4000/api/characters')
+        this.characters = resp.data.data || []
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+  },
+
+  mounted() {
+    const isProduction = process.env.NODE_ENV === 'production'
+    const socketUrl = isProduction
+      ? 'wss://lk2.staging.newprolab.com/socket'
+      : 'ws://0.0.0.0:4000/socket'
+
+   this.socket = new Socket(socketUrl)
+   this.getCharacters()
+
+  },
+
+
 
 }
 </script>
