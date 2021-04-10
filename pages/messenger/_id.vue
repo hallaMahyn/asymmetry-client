@@ -28,7 +28,6 @@
 
 <script>
 
-import sections  from "./data.js"
 import { Socket } from 'phoenix-channels'
 import axios from 'axios'
 
@@ -61,7 +60,6 @@ export default {
         {id: 7, title: "3" },
         {id: 8, title: "4"}
       ],
-      currentSection: 0,
     }
   },
 
@@ -84,31 +82,18 @@ export default {
     },
 
     async setAnswerSelected (option, message) {
-      console.log("TYT")
 
       if (this.answerIds.includes(option.id)) return
 
       await this.channel.push("next_message",
         {
           answer: {
-            chapter_id: 1,
+            chapter_id: this.character.chapters[0].id,
             message_id: message.id,
             option_id: option.id
           }
         }
       )
-
-      await this.channel.on("next_message", resp => {
-          console.log("next", resp.messages)
-          resp.messages.map(async (el, i) => {
-          // let time = el.text.length * 0.7 * 300
-          return setTimeout(() => {
-            this.feed.push(el)
-          // }, time)
-          }, (i + 1) *  700)
-        })
-      })
-
 
       let optionIds = message?.options.map(opt => opt.id)
 
@@ -116,10 +101,8 @@ export default {
         this.highlightFeed = !this.highlightFeed
       }
 
-
       this.answersSelected.push(option.id)
       this.answerIds.push(...optionIds)
-      // this.currentSection++
     },
 
     async initData() {
@@ -131,7 +114,7 @@ export default {
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
         ? 'wss://lk2.staging.newprolab.com/socket'
-        : 'ws://0.0.0.0:4000/socket'
+        : "ws://localhost:4000/socket"
 
       let defaultSocket = new Socket(socketUrl)
       this.socket = this.mainSocket || defaultSocket
@@ -150,7 +133,17 @@ export default {
             let selectedOptionIds = payload.messages.map(m => m.options).flat().filter(o => o.disabled === true).map(o => o.id)
 
             this.answerIds = selectedOptionIds
-            this.feed = payload.messages || []
+            this.feed = payload.messages
+
+
+            this.channel.on("next_message", resp => {
+                resp.messages.map(async (el, i) => {
+                return setTimeout(() => {
+                  this.feed.push(el)
+                }, (i + 1) *  700)
+              })
+            })
+
           })
 
         })
@@ -220,187 +213,6 @@ export default {
 .messages-scroll-wrapper::-webkit-scrollbar {
   display: none;
 }
-/* .messages {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin-right: 20px;
-  flex: 5;
-  padding-bottom: 24px;
-
-
-  &-message {
-    max-width: 606px;
-    padding: 21px 24px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-  }
-
-}
-.messages > span {
-  width: 100%;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  margin-right: 15px;
-  object-fit: cover;
-  margin-bottom: 12px;
-} */
-
-/* .messages-wrapper {
-  display: flex;
-  width: 100%;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-
-  transform: translateY(0);
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  will-change: transform, opacity;
-} */
-
-/* .messages-message-with-avatar {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-end;
-} */
-
-/* .messages-message_task .messages-message-text {
-  opacity: 0.5;
-} */
-
-/* .messages-message_regular {
-  background: #F3F3F3;
-}
-
-.messages-message_answer {
-  align-self: flex-end;
-}
-.messages-message_system {
-  align-self: center;
-  max-width: 600px;
-  font-size: 24px;
-} */
-/* 
-.messages-message_task {
-  background: #FFECED;
-  min-width: 606px;
-  max-width: 606px;
-  box-shadow: -5px 5px 10px rgba(224, 208, 209, 0.2),
-    5px -5px 10px rgba(224, 208, 209, 0.2),
-    -5px -5px 10px rgba(255, 255, 255, 0.9),
-    5px 5px 13px rgba(224, 208, 209, 0.9);
-  margin-bottom: 40px;
-
-}
-
-.messages-message_option {
-  display: flex;
-  flex-flow: row nowrap;
-  max-width: 452px;
-  width: 100%;
-  align-self: flex-end;
-  align-items: center;
-  box-shadow: -2px 2px 4px rgba(207, 207, 207, 0.2),
-   2px -2px 4px rgba(207, 207, 207, 0.2),
-    -2px -2px 4px rgba(255, 255, 255, 0.9),
-     2px 2px 5px rgba(207, 207, 207, 0.9),
-      inset 1px 1px 2px rgba(255, 255, 255, 0.3),
-       inset -1px -1px 2px rgba(207, 207, 207, 0.5);
-  border-radius: 12px;
-  margin-bottom: 12px;
-  padding: 18px;
-  justify-content: flex-start;
-  cursor: pointer;
-  &--disabled {
-    user-select: none;
-    opacity: 0.7;
-    cursor: default;
-  }
-
-} */
-
-/* .messages-message_option_order {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  box-shadow: -2px 2px 4px rgba(207, 207, 207, 0.2),
-    2px -2px 4px rgba(207, 207, 207, 0.2),
-    -2px -2px 4px rgba(255, 255, 255, 0.9),
-    2px 2px 5px rgba(207, 207, 207, 0.9),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.3),
-    inset -1px -1px 2px rgba(207, 207, 207, 0.5);
-  border-radius: 12px;
-  margin-right: 18px;
-}
-
-
-
-.messages-message_option--selected {
-  position: relative;
-}
-
-.messages-message_option--selected:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: -2px 2px 4px rgba(215, 215, 215, 0.2),
-    2px -2px 4px rgba(215, 215, 215, 0.2),
-    -2px -2px 4px rgba(255, 255, 255, 0.9),
-    2px 2px 5px rgba(215, 215, 215, 0.9),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.3),
-    inset -1px -1px 2px rgba(215, 215, 215, 0.5);
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.messages-message_option--selected:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  border-radius: 12px;
-  width: 100%;
-  box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3),
-    -1px -1px 2px rgba(207, 207, 207, 0.5),
-    inset -2px 2px 4px rgba(207, 207, 207, 0.2),
-    inset 2px -2px 4px rgba(207, 207, 207, 0.2),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.9),
-    inset 2px 2px 5px rgba(207, 207, 207, 0.9);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.messages-message_option:before {
-  opacity: 1;
-}
-
-.messages-message_option:after {
-  opacity: 0;
-}
-
-.messages-message_option--selected:after {
-  opacity: 1;
-}
-
-.messages-message_option--selected::before {
-  opacity: 0;
-}
-
-.messages-message_option_text {
-} */
 
 .chapter-section {
   display: flex;
