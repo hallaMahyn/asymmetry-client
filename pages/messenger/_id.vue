@@ -113,7 +113,7 @@ export default {
     async connectSocket() {
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
-        ? 'ws://asmtry.com/admin/socket'
+        ? 'ws://asmtry.com/socket'
         : 'ws://localhost:4000/socket'
 
       let defaultSocket = new Socket(socketUrl)
