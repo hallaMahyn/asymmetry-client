@@ -32,7 +32,11 @@ export default {
   methods: {
     async getCharacters() {
       try {
-        const resp = await axios.get('http://localhost:4000/api/characters')
+        const isProduction = process.env.NODE_ENV === 'production'
+        const url = isProduction
+          ? `http://23.105.248.11:4003/api/characters`
+          : `http://localhost:4000/api/characters`
+        const resp = await axios.get(url)
         this.characters = resp.data.data || []
       } catch (error) {
         console.error(error);
@@ -44,8 +48,8 @@ export default {
   mounted() {
     const isProduction = process.env.NODE_ENV === 'production'
     const socketUrl = isProduction
-      ? 'wss://lk2.staging.newprolab.com/socket'
-      : 'ws://0.0.0.0:4000/socket'
+      ? 'ws://23.105.248.11:4003/socket'
+      : 'ws://localhost:4000/socket'
 
    this.socket = new Socket(socketUrl)
    this.getCharacters()

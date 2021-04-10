@@ -113,8 +113,8 @@ export default {
     async connectSocket() {
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
-        ? 'wss://lk2.staging.newprolab.com/socket'
-        : "ws://localhost:4000/socket"
+        ? 'ws://23.105.248.11:4003/socket'
+        : 'ws://localhost:4000/socket'
 
       let defaultSocket = new Socket(socketUrl)
       this.socket = this.mainSocket || defaultSocket
@@ -152,7 +152,11 @@ export default {
 
     async getCharacter() {
       try {
-        const resp = await axios.get(`http://localhost:4000/api/characters/${this.$route.params.id}`)
+        const isProduction = process.env.NODE_ENV === 'production'
+        const url = isProduction
+          ? `http://23.105.248.11:4003/api/characters/${this.$route.params.id}`
+          : `http://localhost:4000/api/characters/${this.$route.params.id}`
+        const resp = await axios.get(url)
         this.character = resp.data.data
       } catch (error) {
         console.error(error);
