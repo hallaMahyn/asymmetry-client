@@ -24,6 +24,9 @@ export default {
     './assets/Main.css'
 
   ],
+  router: {
+    base: '/chatApp/'
+  },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
