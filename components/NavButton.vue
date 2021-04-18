@@ -31,7 +31,7 @@ export default {
   },
 
   mounted: function () {
-    console.log("current route", $nuxt.$route.path )
+    // console.log("current route", $nuxt.$route.path )
   }
 }
 

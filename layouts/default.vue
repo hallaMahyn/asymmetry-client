@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <Sidebar />
+    <Sidebar v-if="this.$route.name !== 'log_in'"/>
     <Nuxt />
   </div>
 </template>
