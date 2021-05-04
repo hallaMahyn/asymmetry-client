@@ -4,7 +4,7 @@
       <div class="dashboard_left-card_section">
         <tricky-circle :avatar="userAvatar" :withAvatar="true"/>
         <div class="dashboard_user-info">
-          <span class="dashboard_user-info_full-name">{{user.first_name}} <br/> {{user.last_name}}</span>
+          <span class="dashboard_user-info_full-name">{{first_name}} <br/> {{last_name}}</span>
           <span class="dashboard_user-info_profession">Business Semiotics</span>
         </div>
         <div class="card_middleline" />
@@ -62,16 +62,13 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="card_middleline" /> -->
     </div>
   </div>
 </template>
 
 <script>
-// import InfoSquare from '../components/InfoSquare.vue'
+
 export default {
-  // components: { InfoSquare },
   data() {
     return {
       user: null,
@@ -93,6 +90,15 @@ export default {
   created() {
     this.user = this.$store.state.user
     this.userAvatar = this.user?.avatar?.url
+  },
+  computed: {
+    first_name() {
+      return this.user?.first_name
+    },
+
+    last_name() {
+      return this.user?.last_name
+    }
   },
   methods: {
 

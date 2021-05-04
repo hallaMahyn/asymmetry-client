@@ -43,6 +43,12 @@ export default {
   },
 
 
+  toast: {
+    position: 'top-right',
+    duration: 1500,
+  },
+
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
@@ -58,7 +64,8 @@ export default {
   modules: [
     'nuxt-svg-loader',
     '@nuxtjs/proxy',
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/toast',
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

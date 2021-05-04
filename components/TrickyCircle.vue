@@ -4,7 +4,6 @@
       <div class="tricky-circle_nested">
         <div class="tricky-circle_progress">
           {{progress}}<span v-if="percentage">%</span>
-
         </div>
         <div class="tricky-circle_title">
           {{title}}
@@ -43,7 +42,6 @@ export default {
     data(){
       return {
         defaultPhoto: "https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg",
-
       }
     }
 }

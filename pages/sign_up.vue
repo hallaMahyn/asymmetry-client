@@ -236,7 +236,7 @@ export default {
     },
 
     checkEqual() {
-      return this.password === this.passwordConfirm ? null : "Password do now match"
+      return this.password === this.passwordConfirm ? null : "Password do not match"
     },
 
 

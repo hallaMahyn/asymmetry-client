@@ -31,7 +31,6 @@ import asmLogo from '@/assets/icons/asmLogo.svg'
       } else if (this.excluded.includes(this.$route.name) && token) {
         this.$router.push('/dashboard')
       }
-
     },
 
     methods: {

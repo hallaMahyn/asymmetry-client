@@ -16,7 +16,7 @@
           />
         </div>
         <div class="user-info">
-          <span class="user-info_full-name">{{user.first_name}} <br/> {{user.last_name}}</span>
+          <span class="user-info_full-name">{{first_name}} <br/> {{last_name}}</span>
           <span class="user-info_profession">Business Semiotics</span>
         </div>
         <div class="card_middleline" />
@@ -49,6 +49,7 @@
             <Button
               v-if="user.first_name !== updatedUser.first_name"
               title="Save"
+              :isLoading="isLoading"
               :isBtnActive="true"
               @btnClick="updateProfile('first_name', updatedUser.first_name)"
             />
@@ -72,6 +73,7 @@
             <Button
               v-if="user.last_name !== updatedUser.last_name"
               title="Save"
+              :isLoading="isLoading"
               :isBtnActive="true"
               @btnClick="updateProfile('last_name', updatedUser.last_name)"
             />
@@ -92,6 +94,7 @@
             <Button
               v-if="user.email !== updatedUser.email"
               title="Save"
+              :isLoading="isLoading"
               :isBtnActive="true"
               @btnClick="updateProfile('email', updatedUser.email)"
             />
@@ -131,13 +134,13 @@
           <Button
             v-if="password.length > 0"
             title="Save"
+            :isLoading="isLoading"
             :isBtnActive="validationMessages.every(el => el === null)"
             @btnClick="updateProfile('password', password)"
           />
         </div>
       </div>
       <div class="input_validations"  v-if="password.length > 0">
-        <!-- {{validationMessages.every(el => el === null)}} -->
         <transition-group name="fade">
           <div v-for="(m,i) in validationMessages" :key="i + m">
             <span v-show="m">{{m}}</span>
@@ -167,7 +170,8 @@ export default {
       userAvatar: null,
       updatedUser: null,
       file: '',
-      upload: ''
+      upload: '',
+      isLoading: false
     }
   },
   created() {
@@ -182,13 +186,20 @@ export default {
   computed: {
     validationMessages() {
       return [this.checkLatin(), this.checkLength(), this.checkDigit(), this.checkEqual()]
+    },
+
+    first_name() {
+      return this.user?.first_name
+    },
+
+    last_name() {
+      return this.user?.last_name
     }
   },
 
 
   methods: {
     checkLength() {
-      // return this.password.match(/^.{8,}/g)?.length > 0 ? '' : 'A'
       return /^.{8,}/g.test(this.password) ? null : 'At least 8 symbols'
     },
 
@@ -209,8 +220,7 @@ export default {
     initStuff() {
       this.user = this.$store.state.user
       this.updatedUser = cloneDeep(this.$store.state.user)
-      console.log(this.user.avatar?.url)
-      this.userAvatar = this.user.avatar?.url
+      this.userAvatar = this.user?.avatar?.url
     },
 
     showPassword(id) {
@@ -223,9 +233,8 @@ export default {
     },
 
     updateProfile(field, value) {
-      // isLoading
-      console.log("filed", field)
-      console.log("value", value)
+      this.isLoading = true
+
       const url = `/api/update_profile`
 
       let formData = new FormData()
@@ -238,8 +247,14 @@ export default {
         this.$store.commit('add', user)
         this.user = user
         localStorage.setItem('user', JSON.stringify(user))
+        this.password = ''
+        this.passwordConfirm = ''
+        this.isLoading = false
+        this.$toast.success('Saved')
+
       }).catch(err => {
         console.log(err)
+        this.$toast.error('Something was wrong')
       })
     },
 

@@ -79,12 +79,6 @@ export default {
   },
 
   computed: {
-    // passwordValid() {
-    //  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/g
-    //  let result = this.password.match(regex)
-    //  return result?.length > 0
-    // },
-
     validationMessages() {
       return [this.checkLatin(), this.checkLength(), this.checkDigit(), this.checkEqual()]
     }
@@ -107,7 +101,7 @@ export default {
     },
 
     checkEqual() {
-      return this.password === this.passwordConfirm ? null : "Password do now match"
+      return this.password === this.passwordConfirm ? null : "Password do not match"
     },
 
     showPassword(id) {
