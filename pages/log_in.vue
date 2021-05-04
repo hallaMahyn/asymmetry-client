@@ -1,7 +1,7 @@
 <template>
   <div class="login">
 <!-- init flow -->
-    <div v-if="userFound === false" class="login-container">
+    <div v-if="currentFlow === 'log_in'" class="login-container">
       <div class="login-container_title"> Login or sign up</div>
       <div class="login-container_wrapper">
         <div class="login-container_email">
@@ -12,6 +12,7 @@
             v-model="email"
             class="login-container_input"
             placeholder="Enter e-mail"
+            @keyup.enter="checkPresence"
           />
         </div>
 
@@ -19,17 +20,18 @@
           <Button
             title="Next"
             :isBtnActive="btnActive"
+            :isLoading="isLoading"
             @btnClick="checkPresence"
           />
         </div>
       </div>
     </div>
 <!-- user found flow here -->
-    <div v-else class="login-container">
+    <div v-if="user && currentFlow === 'userFound'" class="login-container">
       <div class="login-container_title"> Hello! </div>
       <div class="login-container_user-card">
-        <img class="login-container_user-card_avatar" :src="user.avatar" />
-        <div class="login-container_user-card_name"> {{user.name + ' ' + user.last_name }} </div>
+        <img class="login-container_user-card_avatar" :src="userAvatar || defaultPhoto" />
+        <div class="login-container_user-card_name"> {{user.first_name + ' ' + user.last_name }} </div>
       </div>
       <div class="login-container_wrapper">
         <div class="login-container_password">
@@ -43,8 +45,9 @@
               v-model="password"
               placeholder="Enter your password"
               id="password-input"
+              @keyup.enter="logIn"
             />
-            <div class="glas" v-if="password.length > 0" @click="showPassword"/>
+            <glaz class="glas" v-if="password.length > 0" @click="showPassword"  />
           </div>
         </div>
 
@@ -52,44 +55,123 @@
           <Button
             title="Log in"
             :isBtnActive="password.length > 3"
-            @btnClick="checkPresence"
+            :isLoading="isLoading"
+            @btnClick="logIn"
           />
         </div>
       </div>
+      <span class="errorMessages">{{errorMessages}}</span>
+
+      <div class="forgot_password" @click="forgotPassword">Forgot your password?</div>
     </div>
+    <div v-if="currentFlow === 'forgotPassword'" class="login-container">
+      <div class="login-container_title"> We've sent you a letter</div>
+      <div class="login-container_user-card">
+        <img class="login-container_user-card_avatar" :src="userAvatar || defaultPhoto" />
+        <div class="login-container_user-card_name"> {{user.first_name + ' ' + user.last_name }} </div>
+      </div>
+      <div class="login-container_wrapper text">
+      <span>
+        To recover you password <br/>
+        follow the link in the email <br/>
+        we sent you to {{email}}
+      </span>
+
+      </div>
+    </div>
+
+
 
   </div>
 </template>
 
-
 <script>
 
+import Glaz from '@/assets/icons/glaz.svg'
+
+
 export default {
+  components: {
+    Glaz
+  },
+
   data() {
     return {
       email: '',
       password: '',
       user: null,
+      userAvatar: null,
       isLoading: false,
       isBtnActive: false,
-      userFound: false
+      currentFlow: 'log_in',
+      defaultPhoto: "https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg",
+      errorMessages: '',
     }
 
   },
 
+  mounted() {
+    // let token = localStorage.getItem("user-token")
+    // if (token?.length > 0) {
+    //   this.$router.push('/')
+    // }
+  },
+
+  middleware: 'authenticated',
+
   methods: {
     checkPresence() {
-      this.user = this.getUser()
-      this.userFound = true
+      this.getUser()
+    },
+
+    logIn() {
+        this.isLoading = true
+        this.errorMessages = ''
+        const params = { email: this.user.email, password: this.password }
+        const url = `/api/sign_in`
+        this.$axios.$post(url, params)
+          .then(res => {
+            this.$axios.setToken(res.data.token, 'Bearer')
+
+            localStorage.setItem('user-token', res.data.token)
+
+            this.$store.commit('add', this.user)
+            localStorage.setItem('user', JSON.stringify(this.user))
+            this.$router.push('/dashboard')
+          })
+          .catch(err => {
+            this.isLoading = false
+            this.errorMessages = "Wrong password"
+          })
+    },
+
+    forgotPassword () {
+      this.errorMessages = ''
+      this.currentFlow = 'forgotPassword'
+      const url = `/api/forgot_password`
+      const params = { email: this.user.email }
+      this.$axios.$post(url, params)
+        .then(res => {
+          this.currentFlow = 'forgotPassword'
+        })
+        .catch(err => {
+          this.errorMessages = "Something was wrong"
+          console.log(err)
+        })
     },
 
     getUser() {
-      return {
-        id: 1,
-        avatar: 'https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg',
-        name: 'Mama',
-        last_name: 'Papa'
-      }
+      const url = `/api/user_info/${this.email}`
+
+      this.$axios.$get(url)
+        .then(user => {
+          this.user = user
+          this.currentFlow = 'userFound'
+          this.userAvatar = user.avatar?.url
+        })
+        .catch(err => {
+          this.$router.push(`sign_up/?email=${this.email}`)
+        })
     },
 
     showPassword() {
@@ -108,7 +190,7 @@ export default {
      const regex = /^[A-Za-z0-9+_.-]+@.+\..+$/g
      let result = this.email.match(regex)
      return result?.length > 0
-    }
+    },
 
   }
 
@@ -130,8 +212,8 @@ export default {
 }
 .login-container {
   width: 460px;
-  min-height: 300px;
-  /* border: 1px solid red; */
+  height: 100%;
+  padding: 100px 0px;
   font-size: 32px;
   line-height: 38px;
   color: #FC0D1B;
@@ -157,7 +239,7 @@ export default {
 }
 
 .login-container_button {
-  /* width: 124px; */
+  width: 124px;
 }
 
 .login-container_input-label {
@@ -191,6 +273,7 @@ export default {
   height: 66px;
   width: 320px;
   border-radius: 12px;
+  user-select: none;
   box-shadow: -2px 2px 4px rgba(215, 215, 215, 0.2),
     2px -2px 4px rgba(215, 215, 215, 0.2),
     -2px -2px 4px rgba(255, 255, 255, 0.9),
@@ -215,12 +298,27 @@ export default {
   top: 25px;
   right: 12px;
   width: 22px;
-  height: 14px;
-  background: red;
-  background: url('../assets/icons/glaz.svg') no-repeat center / cover
-  /* background: url(') center/cover; */
-  /* background-image: url('../assets/icons/glaz.svg'); */
+  height: 12px;
+  object-fit: contain;
+}
 
+.errorMessages{
+  display: block;
+  min-height: 70px;
+  font-size: 16px;
+}
+.forgot_password {
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+
+}
+
+.text {
+  text-align: left;
+  font-size: 20px;
+  line-height: 24px;
+  /* max-width: 260px; */
 }
 
 </style>

@@ -11,7 +11,6 @@
 
 import CharacterCard from '@/components/CharacterCard.vue'
 import { Socket } from 'phoenix-channels'
-import axios from 'axios'
 
 export default {
   components: { CharacterCard },
@@ -32,12 +31,14 @@ export default {
   methods: {
     async getCharacters() {
       try {
-        const isProduction = process.env.NODE_ENV === 'production'
-        const url = isProduction
-          ? `http://23.105.248.11:4003/api/characters`
-          : `http://localhost:4000/api/characters`
-        const resp = await axios.get(url)
-        this.characters = resp.data.data || []
+        const url = 'api/characters'
+        this.$axios.$get(url)
+          .then(res => {
+            this.characters = res || []
+          })
+          .catch(err => {
+            console.log(err)
+          })
       } catch (error) {
         console.error(error);
       }

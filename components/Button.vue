@@ -1,11 +1,10 @@
 <template>
   <div
-    :class="{'button': true, 'inactive': !isBtnActive}"
+    :class="{'button': true, 'inactive': !isBtnActive || isLoading === true}"
     @click="$emit('btnClick')"
   >
     <div class="button-title">
-      <!-- {{ isloading === true ? 'Loading' : title }} -->
-      {{ title }}
+      {{ isLoading === true ? 'Loading' : title }}
     </div>
   </div>
 </template>
@@ -57,9 +56,10 @@ export default {
   box-shadow: -2px 2px 4px rgba(217, 201, 201, 0.2), 2px -2px 4px rgba(217, 201, 201, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9), 2px 2px 5px rgba(217, 201, 201, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.3), inset -1px -1px 2px rgba(217, 201, 201, 0.5);
   border-radius: 12px;
   font-family: 'ONY-FORM Digital';
-  padding: 12px 38px;
+  padding: 12px 12px;
   cursor: pointer;
   transition: opacity 0.3s ease;
+  justify-content: center;
   &-title {
     font-size: 16px;
   }

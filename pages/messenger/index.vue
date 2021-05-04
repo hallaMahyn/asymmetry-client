@@ -6,5 +6,6 @@
 .messager-empty {
   display: flex;
   margin: 20px;
+  color: #FC0D1B;
 }
 </style>

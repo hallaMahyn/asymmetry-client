@@ -3,6 +3,7 @@
     <NavButton type="dashboard" />
     <NavButton type="messenger" />
     <NavButton type="map" />
+    <NavButton type="profile" />
   </div>
 </template>
 

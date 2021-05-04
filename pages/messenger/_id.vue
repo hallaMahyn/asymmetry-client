@@ -29,7 +29,6 @@
 <script>
 
 import { Socket } from 'phoenix-channels'
-import axios from 'axios'
 
 export default {
   props: {
@@ -105,12 +104,7 @@ export default {
       this.answerIds.push(...optionIds)
     },
 
-    async initData() {
-      await this.getCharacter()
-      await this.connectSocket()
-    },
-
-    async connectSocket() {
+     connectSocket() {
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
         ? 'ws://23.105.248.11:4003/socket'
@@ -151,22 +145,18 @@ export default {
     },
 
     async getCharacter() {
-      try {
-        const isProduction = process.env.NODE_ENV === 'production'
-        const url = isProduction
-          ? `http://23.105.248.11:4003/api/characters/${this.$route.params.id}`
-          : `http://localhost:4000/api/characters/${this.$route.params.id}`
-        const resp = await axios.get(url)
-        this.character = resp.data.data
-      } catch (error) {
-        console.error(error);
-        return null
-      }
+      const url = `api/characters/${this.$route.params.id}`
+      await this.$axios.$get(url).then(res => {
+        this.character = res
+        this.connectSocket()
+      }).catch(err => {
+        console.log("err", err)
+      })
     }
   },
 
   mounted() {
-    this.initData()
+    this.getCharacter()
 
     if (!this.startAnimation) {
       this.startTimer()
@@ -174,10 +164,11 @@ export default {
   },
 
   watch: {
-    '$nuxt.$route.params.id': function(val) {
+    '$nuxt.$route.params.id': function() {
+      this.getCharacter()
       this.startTimer()
     },
-    'messages': function(messages) {
+    'messages': function() {
       setTimeout(() => this.scrollToBottom(), 0 )
       this.scrollToBottom()
 
@@ -208,7 +199,6 @@ export default {
 .messages-scroll-wrapper {
   height: 100%;
   max-height: 100vh;
-  /* width: 100%; */
   overflow: auto;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */

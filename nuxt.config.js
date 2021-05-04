@@ -28,6 +28,21 @@ export default {
     base: '/chatApp/'
   },
 
+  axios: {
+    baseUrl: 'http://localhost:4000',
+    proxy: true
+  },
+
+  proxy: {
+    '/api/': {
+      target: process.env.NODE_ENV === 'production' ? 'http://23.105.248.11:4003' : 'http://localhost:4000'
+    },
+    '/admin/': {
+      target: process.env.NODE_ENV === 'production' ? 'http://23.105.248.11:4003' : 'http://localhost:4000'
+    }
+  },
+
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
@@ -42,6 +57,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     'nuxt-svg-loader',
+    '@nuxtjs/proxy',
+    '@nuxtjs/axios'
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

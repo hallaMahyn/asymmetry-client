@@ -1,8 +1,9 @@
 <template>
   <NuxtLink class="nav-button" :to="`/${type}`">
-    <messenger-icon v-if="type == 'messenger' "/>
-    <dashboard-icon v-if="type == 'dashboard' "/>
-    <map-icon v-if="type == 'map' "/>
+    <messenger-icon v-if="type === 'messenger' "/>
+    <dashboard-icon v-if="type === 'dashboard' "/>
+    <map-icon v-if="type === 'map' "/>
+    <profile-icon v-if="type === 'profile'" />
   </NuxtLink>
 
 
@@ -11,6 +12,7 @@
 import MessengerIcon from "@/assets/icons/messengerIcon.svg"
 import DashboardIcon from "@/assets/icons/dashboardIcon.svg"
 import MapIcon from "@/assets/icons/mapIcon.svg"
+import ProfileIcon from "@/assets/icons/profile.svg"
 
 export default {
   props: {
@@ -23,7 +25,8 @@ export default {
   components: {
     MessengerIcon,
     DashboardIcon,
-    MapIcon
+    MapIcon,
+    ProfileIcon
   },
 
   methods: {
