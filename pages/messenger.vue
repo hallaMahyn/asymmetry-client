@@ -47,14 +47,15 @@ export default {
   },
 
   mounted() {
+    const token = localStorage.getItem('user-token')
     const isProduction = process.env.NODE_ENV === 'production'
     const socketUrl = isProduction
       ? 'ws://23.105.248.11:4003/socket'
       : 'ws://localhost:4000/socket'
 
-   this.socket = new Socket(socketUrl)
-   this.getCharacters()
+    this.socket = new Socket(socketUrl, { params: { token: token } })
 
+    this.getCharacters()
   },
 
 

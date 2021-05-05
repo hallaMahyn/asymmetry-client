@@ -65,7 +65,12 @@ export default {
   computed: {
     messages: function() {
      return  this.feed
+    },
+
+    currentUser() {
+      this.$store.state.user
     }
+
   },
 
   methods: {
@@ -105,19 +110,21 @@ export default {
     },
 
      connectSocket() {
+      const user = this.$store.state.user
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
         ? 'ws://23.105.248.11:4003/socket'
         : 'ws://localhost:4000/socket'
 
-      let defaultSocket = new Socket(socketUrl)
-      this.socket = this.mainSocket || defaultSocket
+      const token = localStorage.getItem('user-token')
+      const defaultSocket = new Socket(socketUrl, { params: { token: token } })
 
+      this.socket = this.mainSocket || defaultSocket
       this.socket.connect()
 
       let currentChapter = this.character.chapters[0]
 
-      this.channel = this.socket.channel("user:default", {})
+      this.channel = this.socket.channel(`user:${user.id}`, {})
       this.channel.join()
         .receive("ok", _ => {
           console.log("Joined successfully")

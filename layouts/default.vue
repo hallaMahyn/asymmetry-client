@@ -47,7 +47,7 @@ import asmLogo from '@/assets/icons/asmLogo.svg'
 
         this.$axios.$get(url)
           .then(user => {
-            console.log("default vue", user.first_name)
+            // console.log("default vue", user.first_name)
             this.$store.commit('add', user)
           })
           .catch(err => {

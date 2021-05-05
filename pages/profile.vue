@@ -16,7 +16,7 @@
           />
         </div>
         <div class="user-info">
-          <span class="user-info_full-name">{{first_name}} <br/> {{last_name}}</span>
+          <span class="user-info_full-name">{{firstName}} <br/> {{lastName}}</span>
           <span class="user-info_profession">Business Semiotics</span>
         </div>
         <div class="card_middleline" />
@@ -188,11 +188,11 @@ export default {
       return [this.checkLatin(), this.checkLength(), this.checkDigit(), this.checkEqual()]
     },
 
-    first_name() {
+    firstName() {
       return this.user?.first_name
     },
 
-    last_name() {
+    lastName() {
       return this.user?.last_name
     }
   },
@@ -220,7 +220,7 @@ export default {
     initStuff() {
       this.user = this.$store.state.user
       this.updatedUser = cloneDeep(this.$store.state.user)
-      this.userAvatar = this.user?.avatar?.url
+      this.userAvatar = this.user?.avatar
     },
 
     showPassword(id) {

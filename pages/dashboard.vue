@@ -4,7 +4,7 @@
       <div class="dashboard_left-card_section">
         <tricky-circle :avatar="userAvatar" :withAvatar="true"/>
         <div class="dashboard_user-info">
-          <span class="dashboard_user-info_full-name">{{first_name}} <br/> {{last_name}}</span>
+          <span class="dashboard_user-info_full-name">{{firstName}} <br/> {{lastName}}</span>
           <span class="dashboard_user-info_profession">Business Semiotics</span>
         </div>
         <div class="card_middleline" />
@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       user: null,
-      userAvatar: null,
+      // userAvatar: null,
       chapters: [
         {id: 1, title: "first"},
         {id: 2, title: "two"},
@@ -89,16 +89,21 @@ export default {
   },
   created() {
     this.user = this.$store.state.user
-    this.userAvatar = this.user?.avatar?.url
+    // this.userAvatar = this.user?.avatar
   },
   computed: {
-    first_name() {
+    firstName() {
       return this.user?.first_name
     },
 
-    last_name() {
+    lastName() {
       return this.user?.last_name
+    },
+
+    userAvatar() {
+      return this.user?.avatar
     }
+
   },
   methods: {
 

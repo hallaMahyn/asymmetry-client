@@ -167,7 +167,7 @@ export default {
         .then(user => {
           this.user = user
           this.currentFlow = 'userFound'
-          this.userAvatar = user.avatar?.url
+          this.userAvatar = user?.avatar
         })
         .catch(err => {
           this.$router.push(`sign_up/?email=${this.email}`)
