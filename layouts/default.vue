@@ -2,7 +2,7 @@
   <div class="main-container">
     <Sidebar v-if="!excluded.includes(this.$route.name)"/>
     <Nuxt />
-    <asm-logo class="logo" />
+    <asm-logo class="logo" @click="goToMain()"/>
   </div>
 </template>
 
@@ -34,6 +34,14 @@ import asmLogo from '@/assets/icons/asmLogo.svg'
     },
 
     methods: {
+      goToMain() {
+        let token = localStorage.getItem("user-token")
+        if (token) {
+          this.$router.push('/dashboard')
+        } else {
+          this.$router.push('/log_in')
+        }
+      },
 
       getUser() {
         const url = '/api/profile'
@@ -61,7 +69,7 @@ import asmLogo from '@/assets/icons/asmLogo.svg'
   }
 </script>
 
-<style>
+<style lang="scss">
 html {
   font-size: 16px;
   word-spacing: 1px;
@@ -91,6 +99,11 @@ html {
   height: 36px;
   bottom: 24px;
   left: 33px;
+  cursor: pointer;
+  transition: transform .2s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="messenger">
     <div class="messenger-contacts">
-      <character-card v-for="c in characters" :key="c.id" :character="c" />
+      <character-card v-for="c in characters" :key="c.id" :character="c" location="messenger" />
     </div>
     <NuxtChild :mainSocket="socket" />
   </div>
@@ -17,15 +17,7 @@ export default {
   data() {
     return {
       socket: null,
-      characters: [
-        // {
-        //   id: 1,
-        //   fullName: "Plato",
-        //   avatar: "https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg",
-        // },
-        // { id: 2, fullName: "Krutaya Mamasha", avatar: "https://super01.ru/pictures/product/big/42300_big.jpg", },
-        // { id: 3, fullName: "Longertharteson Jsaidalosiaver", avatar: "https://vokrug-tv.ru/pic/person/0/d/6/8/0d681ba6ed916cc9d795ef6dfdeac19b.jpeg",}
-      ],
+      characters: [],
     }
   },
   methods: {

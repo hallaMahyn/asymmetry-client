@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="character-card" :to="`/messenger/${character.id}`" >
+  <NuxtLink class="character-card" :to="`/${location}/${character.id}`" >
     <img class="character-card_avatar" :src="character.avatar || 'https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg'"/>
     <div class="character-card_full-name">{{character.first_name}}</div>
   </NuxtLink>
@@ -15,8 +15,13 @@ export default {
       required: true
     },
     handleClick: {
-        type: Function,
-        required: false
+      type: Function,
+      required: false
+    },
+    location: {
+      type: String,
+      required: true
+
     }
   },
   components: {

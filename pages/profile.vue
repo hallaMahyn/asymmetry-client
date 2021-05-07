@@ -1,6 +1,5 @@
 <template>
   <div class="profile">
-    <!-- <pre>{{user}}</pre> -->
     <div class="profile_card">
       <div class="profile_card_section">
         <div class="file_input">
@@ -146,10 +145,7 @@
             <span v-show="m">{{m}}</span>
           </div>
         </transition-group>
-
-        <!-- Passwords do not match -->
       </div>
-
     </div>
   </div>
 </template>
