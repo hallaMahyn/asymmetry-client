@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       character: {},
+      currenChapter: null,
       user: null,
       tasks: [
         {
@@ -77,7 +78,8 @@ export default {
     async getCharacter() {
       const url = `api/characters/${this.$route.params.character}`
       await this.$axios.$get(url).then(res => {
-        this.character = res
+        this.character = res.character
+        this.currenChapter = res.chapter
       }).catch(err => {
         console.log("err", err)
       })

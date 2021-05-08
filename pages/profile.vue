@@ -1,5 +1,6 @@
 <template>
   <div class="profile">
+    <div class="log_out shadow" @click="logOut()">Log out</div>
     <div class="profile_card">
       <div class="profile_card_section">
         <div class="file_input">
@@ -228,6 +229,13 @@ export default {
       }
     },
 
+    logOut() {
+      this.$router.push('/log_in')
+      this.$store.commit('add', {})
+      localStorage.removeItem('user')
+      localStorage.removeItem('user-token')
+    },
+
     updateProfile(field, value) {
       this.isLoading = true
 
@@ -265,6 +273,7 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
+  position: relative;
   margin-top: 20px;
   display: flex;
   flex-flow: row nowrap;
@@ -272,6 +281,12 @@ export default {
   height: 100%;
   align-items: flex-start;
   color: #FC0D1B;
+}
+
+.log_out {
+  position: absolute;
+  top: 0;
+  right: 20px;
 }
 
 .profile_card {
@@ -434,6 +449,15 @@ export default {
   left: 0;
   opacity: 0;
   cursor: pointer;
+}
+
+.log_out {
+  cursor: pointer;
+  padding: 16px;
+  transition: transform .3s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 

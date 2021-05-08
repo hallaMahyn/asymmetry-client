@@ -19,7 +19,7 @@
         <div class="chapter-title">Chapters</div>
         <div class="chapter-wrapper">
           <div class="chapter-one" v-for="(ch, i) in chapters" :key="ch.id + i">
-            {{i + 1}}
+            {{ch.position + 1}}
           </div>
         </div>
     </div>
@@ -45,6 +45,7 @@ export default {
       startAnimation: false,
       answersSelected: [],
       character: null,
+      currentChapter: null,
       highlightFeed: false,
       doFilter: true,
       answerIds: [],
@@ -121,14 +122,14 @@ export default {
 
       this.socket = this.mainSocket || defaultSocket
       this.socket.connect()
+      // TODO get real currentChapter
+      // let currentChapter = this.character.chapters[0]
 
-      let currentChapter = this.character.chapters[0]
-
-      this.channel = this.socket.channel(`user:${user.id}`, {})
+      this.channel = this.socket.channel(`user:${user.id}`)
       this.channel.join()
         .receive("ok", _ => {
           console.log("Joined successfully")
-          this.channel.push("start_data", {chapter_id: currentChapter.id})
+          this.channel.push("start_data", {chapter_id: this.currentChapter.id})
 
           this.channel.on("start_data", payload => {
             let selectedOptionIds = payload.messages.map(m => m.options).flat().filter(o => o.disabled === true).map(o => o.id)
@@ -154,7 +155,9 @@ export default {
     async getCharacter() {
       const url = `api/characters/${this.$route.params.id}`
       await this.$axios.$get(url).then(res => {
-        this.character = res
+        this.chapters = res.character.chapters
+        this.character = res.character
+        this.currentChapter = res.chapter
         this.connectSocket()
       }).catch(err => {
         console.log("err", err)

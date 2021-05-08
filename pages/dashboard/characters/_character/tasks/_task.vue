@@ -10,8 +10,8 @@
       </div>
       <div class="task_desctiption_label">Description</div>
       <div class="task_desctiption">{{task.description}}</div>
-      <a :href="task.file" class="file swadow" v-if="task.file && task.file.length > 0">
-        <div class="file_icon swadow">
+      <a :href="task.file" class="file shadow" v-if="task.file && task.file.length > 0">
+        <div class="file_icon shadow">
           <download-icon />
         </div>
         <div class="file_title"> {{task.file_title}} </div>
@@ -19,7 +19,7 @@
       </a>
 
     </div>
-    <div class="right_part swadow">
+    <div class="right_part shadow">
       <div class="deadline">
         <tricky-circle class="circle" title="" />
         <vue-countdown class="overflow_countdown" :time="timeToBurn" v-slot="{ days, hours, minutes, seconds }">
@@ -30,8 +30,8 @@
         <info-square :value="153" title="eX" />
         <info-square :value="12" title="Coints"/>
       </div>
-      <div class="middlelane swadow" />
-      <div class="uploadButton swadow">
+      <div class="middlelane shadow" />
+      <div class="uploadButton shadow">
         <input
           class="input_hidden"
           type="file"
@@ -40,7 +40,7 @@
           accept=".pdf, .xls, .xlsx, .doc, .docs, .csv, .jpg, .jpeg, .gif, .png"
           @change="handleFileUpload()"
         />
-        <div class="file_icon swadow upload">
+        <div class="file_icon shadow upload">
           <download-icon />
         </div>
         Upload your work

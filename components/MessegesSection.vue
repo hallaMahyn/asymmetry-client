@@ -3,7 +3,7 @@
     <!-- <pre>{{message}}</pre> -->
     <div class="messages-message-with-avatar">
       <img
-        v-if="message.type === 'text' || message.type === 'question'"
+        v-if="message.type === 'text' || message.type === 'question' || message.type === 'task'"
         class="avatar"
         src="https://img-tv.vl.ru/fhd/a55b9339c5ab0062776074644a5470d519012c.jpg"
       />

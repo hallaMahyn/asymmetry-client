@@ -92,7 +92,7 @@ html {
 }
 
 
-.swadow {
+.shadow {
   border-radius: 12px;
   box-shadow: -2px 2px 4px rgba(215, 215, 215, 0.2), 2px -2px 4px rgba(215, 215, 215, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9), 2px 2px 5px rgba(215, 215, 215, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.3), inset -1px -1px 2px rgba(215, 215, 215, 0.5);
 }
