@@ -93,7 +93,7 @@ export default {
       await this.channel.push("next_message",
         {
           answer: {
-            chapter_id: this.character.chapters[0].id,
+            chapter_id: this.currentChapter.id,
             message_id: message.id,
             option_id: option.id
           }
@@ -122,8 +122,6 @@ export default {
 
       this.socket = this.mainSocket || defaultSocket
       this.socket.connect()
-      // TODO get real currentChapter
-      // let currentChapter = this.character.chapters[0]
 
       this.channel = this.socket.channel(`user:${user.id}`)
       this.channel.join()
@@ -141,6 +139,7 @@ export default {
             this.channel.on("next_message", resp => {
                 resp.messages.map(async (el, i) => {
                 return setTimeout(() => {
+                  this.currentChapter = el.chapter
                   this.feed.push(el)
                 }, (i + 1) *  700)
               })
