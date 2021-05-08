@@ -40,11 +40,10 @@ export default {
 
   methods: {
     setUp() {
-      const countDownDate = new Date(this.task.deadline).getTime()
+      const countDownDate = new Date(this.task.end_date).getTime()
       let now = new Date().getTime();
       this.timeToBurn = countDownDate - now
     }
-    
   },
   computed: {
     // timer() {

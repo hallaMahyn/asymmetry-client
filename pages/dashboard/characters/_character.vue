@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="message">
-            tratatatata tataattatatatataatat dasdsasdasdads dsadadasdsadasdsds saddaadas asdsadasdsadasd asdadadasdsadas sadadadasdsd asdadsd adssa dasd asda ddsa ad 
+            {{message}}
           </div>
         </div>
         <div class="tasks_container inner">
@@ -47,6 +47,7 @@ export default {
       character: {},
       currenChapter: null,
       user: null,
+      lastMessage: null,
       tasks: [
         {
           id: 1,
@@ -73,6 +74,11 @@ export default {
   },
 
 
+  computed: {
+    message() {
+      return this.lastMessage?.description
+    }
+  },
 
   methods: {
     async getCharacter() {
@@ -80,6 +86,8 @@ export default {
       await this.$axios.$get(url).then(res => {
         this.character = res.character
         this.currenChapter = res.chapter
+        this.tasks = res.tasks
+        this.lastMessage = res.last_message
       }).catch(err => {
         console.log("err", err)
       })
@@ -92,6 +100,7 @@ export default {
 .dashboard_character_container {
   display: flex;
   flex-flow: row nowrap;
+  width: 100%;
 }
 
 .content {

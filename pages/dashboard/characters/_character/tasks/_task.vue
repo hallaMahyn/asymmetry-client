@@ -2,15 +2,15 @@
   <div class="task">
     <div class="center">
       <go-back-icon class="goBack" @click="goToBack()"/>
-      <div class="task_title">{{task.title}}</div>
+      <div class="task_title">{{title}}</div>
       <div class="task_tags">
-        <div class="tag" v-for="(tag, i) in task.tags" :key="tag + i">
+        <div class="tag" v-for="(tag, i) in tags" :key="tag + i">
           {{tag}}
         </div>
       </div>
       <div class="task_desctiption_label">Description</div>
-      <div class="task_desctiption">{{task.description}}</div>
-      <a :href="task.file" class="file shadow" v-if="task.file && task.file.length > 0">
+      <div class="task_desctiption">{{description}}</div>
+      <a :href="taskFile" target="_blank" class="file shadow" v-if="taskFile && taskFile.length > 0">
         <div class="file_icon shadow">
           <download-icon />
         </div>
@@ -65,21 +65,30 @@ export default {
     return {
       timeToBurn: 0,
       work: '',
-      task: {
-        id: 1,
-        title: "Task 1. Придумай себе занятие",
-        description: "But no agreement on definition of what brand is… David Ogilvy says ‘the intangible sum of a product’s attributes’ (not very helpful); Marty Neumeier says ‘a person’s perception of a product or organisation’ (but where do those perceptions come.",
-        deadline: "May 12, 2021 15:37:25",
-        tags: ["Objective", "Another Objective", "Other Objective"],
-        file_title: "File title",
-        file_description: "File Description some info here ",
-        file: "http://www.africau.edu/images/default/sample.pdf"
-      },
+      task: null,
     }
   },
-  mounted() {
-    this.setTimer()
-    // this.getTask()
+  created() {
+    this.getTask()
+  },
+
+  computed: {
+    title() {
+      return this.task?.title
+    },
+
+    description() {
+      return this.task?.description
+    },
+
+    tags() {
+      return this.task?.tags
+    },
+
+    taskFile() {
+      return this.task?.file
+    }
+
   },
 
   methods: {
@@ -87,6 +96,8 @@ export default {
       const url = `api/tasks/${this.$route.params.task}`
       await this.$axios.$get(url).then(res => {
         this.task = res
+        console.log(res)
+        this.setTimer()
       }).catch(err => {
         console.log("err", err)
       })
@@ -96,20 +107,32 @@ export default {
       this.$router.back()
     },
 
-    handleFileUpload(){
+    handleFileUpload() {
       this.work = this.$refs.work.files[0]
-      // this.upload = URL.createObjectURL(this.work)
-      this.downloadWork(this.work)
+      this.uploadWork(this.work)
     },
 
-    downloadWork(workFile) {
-      console.log("work file", workFile)
+    uploadWork(workFile) {
+      const url = `/api/tasks/${this.$route.params.task}`
+      const characterId = this.$route.params.character
 
-      this.$toast.success('Successfully Uploaded')
+      let formData = new FormData()
+
+      formData.append('file', workFile)
+      formData.append('character_id', characterId)
+
+      this.$axios.$post(url, formData, { headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then(res => {
+        this.$toast.success('Successfully Uploaded')
+      }).catch(err => {
+        console.log(err)
+        this.$toast.error('Something was wrong')
+      })
     },
 
     setTimer() {
-      const countDownDate = new Date(this.task.deadline).getTime()
+      const countDownDate = new Date(this.task.end_date).getTime()
       let now = new Date().getTime();
       this.timeToBurn = countDownDate - now
     }
@@ -280,9 +303,9 @@ export default {
   position: absolute;
   font-size: 20px;
   top: 50px;
-  left: 39px;
+  left: 36px;
   text-align: center;
-  width: 68px;
+  width: 80px;
 }
 
 .customToast {

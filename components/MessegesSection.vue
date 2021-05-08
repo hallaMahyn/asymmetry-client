@@ -17,7 +17,6 @@
         }"
       >
         <div class="messages-message-title" v-if="message.type === 'task'"> {{message.title}} </div>
-        <!-- <div class="messages-message-text"> {{message.title}} </div> -->
         <div class="messages-message-text"> {{message.description}} </div>
       </div>
     </div>
@@ -112,7 +111,7 @@ export default {
   /* opacity: 0; */
   transform: translateY(0);
   transition: transform 0.2s ease, opacity 0.2s ease;
-  will-change: transform, opacity;
+  /* will-change: transform, opacity; */
 }
 
 .messages-message-with-avatar {
