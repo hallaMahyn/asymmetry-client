@@ -246,7 +246,7 @@ export default {
         this.password = ''
         this.passwordConfirm = ''
         this.isLoading = false
-        this.$toast.success('Saved')
+        this.$toast.success('Successfully Saved')
 
       }).catch(err => {
         console.log(err)
@@ -435,4 +435,6 @@ export default {
   opacity: 0;
   cursor: pointer;
 }
+
+
 </style>

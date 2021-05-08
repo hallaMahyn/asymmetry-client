@@ -63,8 +63,8 @@ export default {
   },
 
   computed: {
-    messages: function() {
-     return  this.feed
+    messages() {
+     return this.feed
     },
 
     currentUser() {

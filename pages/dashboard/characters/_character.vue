@@ -1,43 +1,51 @@
 <template>
-  <div class="dashboard_character_container">
-    <div class="content">
-      <div class="inner">
-        <div class="title">
-          Last Messages
-        </div>
-        <div class="character_card_with_description">
-          <character-card :character="character" location="messenger"/>
-          <div class="description">
-            Click character to go to the chat
+  <div class="row">
+    <div class="dashboard_left-card">
+      <profile-card :user="user" />
+    </div>
+    <div class="dashboard_character_container" v-if="!$route.params.task">
+      <div class="content" >
+        <div class="inner">
+          <div class="title">
+            Last Messages
+          </div>
+          <div class="character_card_with_description">
+            <character-card :character="character" location="messenger"/>
+            <div class="description">
+              Click character to go to the chat
+            </div>
+          </div>
+          <div class="message">
+            tratatatata tataattatatatataatat dasdsasdasdads dsadadasdsadasdsds saddaadas asdsadasdsadasd asdadadasdsadas sadadadasdsd asdadsd adssa dasd asda ddsa ad 
           </div>
         </div>
-        <div class="message">
-          tratatatata tataattatatatataatat dasdsasdasdads dsadadasdsadasdsds saddaadas asdsadasdsadasd asdadadasdsadas sadadadasdsd asdadsd adssa dasd asda ddsa ad 
+        <div class="tasks_container inner">
+          <div class="title">
+            Tasks
+          </div>
+          <div class="tasks">
+            <task-plug
+              v-for="t in tasks"
+              :key="t.id"
+              :task="t"
+              :location="`/dashboard/characters/${$route.params.character}/tasks/${t.id}`"
+            />
+          </div>
         </div>
       </div>
-      <div class="tasks_container inner">
-        <div class="title">
-          Tasks
-        </div>
-        <div class="tasks">
-          <task-plug v-for="t in tasks" :key="t.id" :task="t"/>
-        </div>
-      </div>
+      <course-card />
     </div>
-    <course-card />
+    <NuxtChild v-else />
   </div>
 </template>
 <script>
-import TaskPlug from '../../components/TaskPlug.vue'
+
 export default {
-  components: { TaskPlug },
-  props: {
-    user: Object,
-    required: true
-  },
+
   data() {
     return {
       character: {},
+      user: null,
       tasks: [
         {
           id: 1,
@@ -53,6 +61,10 @@ export default {
         }
       ]
     }
+  },
+
+  created() {
+    this.user = this.$store.state.user
   },
 
   mounted() {
@@ -85,7 +97,7 @@ export default {
   flex-flow: column nowrap;
   width: 100%;
   min-width: 400px;
-  padding: 0 50px;
+  padding: 0px 20px 0px 50px;
 }
 
 .title {

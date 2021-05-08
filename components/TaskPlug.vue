@@ -1,16 +1,15 @@
 <template>
-  <div class="task withShadow">
+  <NuxtLink :to="location" class="task withShadow">
     <div class="content">
       <div class="title">{{task.title}}</div>
       <div class="description">{{task.description}}</div>
     </div>
     <div class="countdown-timer withShadow">
-      <!-- {{timer}} -->
       <vue-countdown :time="timeToBurn" v-slot="{ days, hours, minutes, seconds }">
         {{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}
       </vue-countdown>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script>
@@ -22,6 +21,10 @@ export default {
   props: {
     task: {
       type: Object,
+      required: true
+    },
+    location: {
+      type: String,
       required: true
     }
   },
@@ -78,11 +81,10 @@ export default {
   border-radius: 12px;
   height: 108px;
   margin-bottom: 12px;
+  text-decoration: none;
+  color: #FC0D1B;
 }
 
-.content {
-
-}
 
 .title {
   font-size: 16px;

@@ -44,8 +44,10 @@ export default {
 
 
   toast: {
-    position: 'top-right',
+    position: 'bottom-right',
     duration: 1500,
+    className: ['customToast'],
+    // containerClass: ['customToast']
   },
 
 

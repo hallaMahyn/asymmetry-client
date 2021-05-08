@@ -55,7 +55,6 @@ import asmLogo from '@/assets/icons/asmLogo.svg'
 
         this.$axios.$get(url)
           .then(user => {
-            // console.log("default vue", user.first_name)
             this.$store.commit('add', user)
           })
           .catch(err => {
@@ -78,7 +77,35 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  color: #FC0D1B;
 }
+
+.dashboard_left-card {
+  width: 269px;
+}
+
+.row {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 20px 20px 0 0 ;
+  width: 100%;
+}
+
+
+.swadow {
+  border-radius: 12px;
+  box-shadow: -2px 2px 4px rgba(215, 215, 215, 0.2), 2px -2px 4px rgba(215, 215, 215, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9), 2px 2px 5px rgba(215, 215, 215, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.3), inset -1px -1px 2px rgba(215, 215, 215, 0.5);
+}
+
+.customToast {
+  background: #FFECED !important;
+  color: #FC0D1B !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: -2px 2px 4px rgba(215, 215, 215, 0.2), 2px -2px 4px rgba(215, 215, 215, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.9), 2px 2px 5px rgba(215, 215, 215, 0.9), inset 1px 1px 2px rgba(255, 255, 255, 0.3), inset -1px -1px 2px rgba(215, 215, 215, 0.5);
+}
+
+
 
 *,
 *::before,
