@@ -46,14 +46,11 @@
         </div>
       </div>
       <div class="input_validations" >
-        <!-- {{validationMessages}} -->
         <transition-group name="fade">
           <div v-for="(m,i) in validationMessages" :key="i + m">
             <span v-show="m">{{m}}</span>
           </div>
         </transition-group>
-
-        <!-- Passwords do not match -->
       </div>
     </div>
   </div>
