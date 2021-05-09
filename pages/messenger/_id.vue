@@ -10,6 +10,7 @@
             :key="i + m.id" :message="m"
             :selected="answersSelected"
             :answerIds="answerIds"
+            :ref="m.id"
             @setSelected="setAnswerSelected" />
         </transition-group>
         </div>
@@ -18,8 +19,8 @@
       <div class="chapter-section">
         <div class="chapter-title">Chapters</div>
         <div class="chapter-wrapper">
-          <div class="chapter-one" v-for="(ch, i) in chapters" :key="ch.id + i">
-            {{ch.position + 1}}
+          <div class="chapter-one" :class="{'currentChapter': ch.position <= currentChapter.position}" v-for="(ch, i) in chapters" :key="ch.id + i" @click="scrollToChapter(ch)">
+            {{i + 1}}
           </div>
         </div>
     </div>
@@ -29,7 +30,6 @@
 <script>
 
 import { Socket } from 'phoenix-channels'
-
 export default {
   props: {
     mainSocket: {
@@ -51,14 +51,14 @@ export default {
       answerIds: [],
       feed: [],
       chapters: [
-        {id: 1, title: "first"},
-        {id: 2, title: "two"},
-        {id: 3, title: "3" },
-        {id: 4, title: "4"},
-        {id: 5, title: "first"},
-        {id: 6, title: "two"},
-        {id: 7, title: "3" },
-        {id: 8, title: "4"}
+        // {id: 1, title: "first"},
+        // {id: 2, title: "two"},
+        // {id: 3, title: "3" },
+        // {id: 4, title: "4"},
+        // {id: 5, title: "first"},
+        // {id: 6, title: "two"},
+        // {id: 7, title: "3" },
+        // {id: 8, title: "4"}
       ],
     }
   },
@@ -80,6 +80,14 @@ export default {
       setTimeout(() => {
         this.startAnimation = true
       }, 200)
+    },
+
+
+    scrollToChapter(chapter) {
+      const target = this.$refs['anchor' + chapter.id]?.[0]
+      if (target){
+        target.$el?.scrollIntoView({behavior: 'smooth'})
+      }
     },
 
     scrollToBottom() {
@@ -130,7 +138,7 @@ export default {
           this.channel.push("start_data", {chapter_id: this.currentChapter.id})
 
           this.channel.on("start_data", payload => {
-            let selectedOptionIds = payload.messages.map(m => m.options).flat().filter(o => o.disabled === true).map(o => o.id)
+            let selectedOptionIds = payload.messages.map(m => m.options).flat().filter(o => o?.disabled === true).map(o => o.id)
 
             this.answerIds = selectedOptionIds
             this.feed = payload.messages
@@ -236,7 +244,8 @@ export default {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 6px;
 }
 
 .chapter-one {
@@ -251,14 +260,23 @@ export default {
   margin-bottom: 12px;
   cursor: pointer;
   border-radius: 12px;
-  &:first-child {
+  /* &:first-child {
     box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3),
       -1px -1px 2px rgba(207, 207, 207, 0.5),
         inset -2px 2px 4px rgba(207, 207, 207, 0.2),
          inset 2px -2px 4px rgba(207, 207, 207, 0.2),
           inset -2px -2px 4px rgba(255, 255, 255, 0.9),
            inset 2px 2px 5px rgba(207, 207, 207, 0.9);
-  }
+  } */
+}
+
+.currentChapter {
+  box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3),
+    -1px -1px 2px rgba(207, 207, 207, 0.5),
+      inset -2px 2px 4px rgba(207, 207, 207, 0.2),
+        inset 2px -2px 4px rgba(207, 207, 207, 0.2),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.9),
+          inset 2px 2px 5px rgba(207, 207, 207, 0.9);
 }
 .highlight {
   /* border: 5px solid blue */

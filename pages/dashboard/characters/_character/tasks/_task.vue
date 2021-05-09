@@ -31,9 +31,13 @@
         <info-square :value="12" title="Coints"/>
       </div>
       <div class="middlelane shadow" />
-      <div class="uploadButton shadow">
+      <div :class="{
+        'uploadButton': true,
+        'shadow': true,
+        'disabled': disabled
+      }">
         <input
-          class="input_hidden"
+          :class="{'input_hidden': true, 'disabled': disabled}"
           type="file"
           id="file"
           ref="work"
@@ -87,6 +91,10 @@ export default {
 
     taskFile() {
       return this.task?.file
+    },
+
+    disabled() {
+      return this.task?.options.length > 0
     }
 
   },
@@ -154,7 +162,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   width: calc(100% - 50px);
-  max-width: 1000px;
+  max-width: 1100px;
   margin-right: 50px;
 }
 
@@ -316,5 +324,12 @@ export default {
 .upload {
   top: 13px;
   left: 10px;
+}
+
+.disabled {
+  user-select: none;
+  
+  
+  cursor: default;
 }
 </style>

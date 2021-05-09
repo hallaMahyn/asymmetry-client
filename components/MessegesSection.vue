@@ -9,12 +9,14 @@
       />
       <div
         :class="{
-          'messages-message': true,
+          'messages-message': message.type === 'anchor' ? false : true,
           'messages-message_regular': message.type === 'text' || message.type === 'question',
           'messages-message_task': message.type === 'task',
           'messages-message_system': message.type === 'system',
           'messages-message_option': message.type === 'option',
         }"
+        :scrollToMe="message.id"
+        ref="anchor"
       >
         <div class="messages-message-title" v-if="message.type === 'task'"> {{message.title}} </div>
         <div class="messages-message-text"> {{message.description}} </div>
@@ -118,6 +120,7 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-end;
+  margin-bottom: 16px;
 }
 
 .messages-message_task .messages-message-text {
@@ -145,7 +148,7 @@ export default {
     5px -5px 10px rgba(224, 208, 209, 0.2),
     -5px -5px 10px rgba(255, 255, 255, 0.9),
     5px 5px 13px rgba(224, 208, 209, 0.9);
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
 
 }
 

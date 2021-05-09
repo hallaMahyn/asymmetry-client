@@ -8,7 +8,7 @@
 <script>
 export default {
   mounted() {
-    console.log(this.$store.state)
+    // console.log(this.$store.state)
   }
 }
 </script>
