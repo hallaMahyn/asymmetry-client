@@ -31,7 +31,7 @@
         <info-square :value="12" title="Coints"/>
       </div>
       <div class="middlelane shadow" />
-      <div :class="{
+      <div v-if="!disabled" :class="{
         'uploadButton': true,
         'shadow': true,
         'disabled': disabled
