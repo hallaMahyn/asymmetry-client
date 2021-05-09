@@ -122,7 +122,8 @@ export default {
       const user = this.$store.state.user
       const isProduction = process.env.NODE_ENV === 'production'
       const socketUrl = isProduction
-        ? 'wss://23.105.248.11:4443/socket'
+        ? 'wss://asmtry.com/socket'
+        // ? 'wss://23.105.248.11:4443/socket'
         : 'ws://localhost:4000/socket'
 
       const token = localStorage.getItem('user-token')
