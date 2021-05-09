@@ -39,7 +39,7 @@
         <div class="forgot-password-container_button">
           <Button
             title="Next"
-            :isBtnActive="password.length >= 8 && password === passwordConfirm"
+            :isBtnActive="validationMessages.every(el => el === null)"
             :isLoading="isLoading"
             @btnClick="changePassword"
           />
